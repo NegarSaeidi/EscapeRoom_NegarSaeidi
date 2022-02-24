@@ -12,8 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private float jumpForce = 5;
 
     private PlayerController playerController;
-
-    Vector2 inputVector = Vector2.zero;
+    public float aimSensitivity = 1.0f;
+    public  Vector2 inputVector = Vector2.zero;
     Vector3 moveDirection = Vector3.zero;
     Vector2 lookInput = Vector2.zero;
 
@@ -26,6 +26,14 @@ public class PlayerMovement : MonoBehaviour
     public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
     public readonly int isRunningHash = Animator.StringToHash("IsRunning");
 
+    public GameObject followTarget;
+    [Header("Ground Detection")]
+    public Transform groundCheck;
+    public float groundRadius = 0.5f;
+    public LayerMask groundMask;
+    public bool isGrounded;
+
+
     private void Awake()
     {
         playerAnimator = GetComponent<Animator>();
@@ -33,15 +41,40 @@ public class PlayerMovement : MonoBehaviour
         playerController = GetComponent<PlayerController>();
     }
 
-    //void Start()
-    //{
-        
-    //}
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+     
+    }
 
-   
+
     void Update()
     {
-        if (playerController.isJumping) return;
+
+
+     
+        followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.x * aimSensitivity, Vector3.up);
+        followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.y * aimSensitivity, Vector3.left);
+
+        var angles = followTarget.transform.localEulerAngles;
+        angles.z = 0;
+        var angle = followTarget.transform.localEulerAngles.x;
+        if (angle > 180 && angle < 300)
+        {
+            angles.x = 300;
+        }
+        else if (angle < 180 && angle > 70)
+        {
+            angles.x = 70;
+        }
+
+        followTarget.transform.localEulerAngles = angles;
+        transform.rotation = Quaternion.Euler(0, followTarget.transform.rotation.eulerAngles.y, 0);
+        followTarget.transform.localEulerAngles = new Vector3(angles.x, 0, 0);
+        //  transform.Rotate(Vector3.up * inputVector.x);
+
+
+       // if (playerController.isJumping) return;
         if (!(inputVector.magnitude > 0)) moveDirection = Vector3.zero;
         moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
         float currentSpeed = playerController.isRunning ? runSpeed : walkSpeed;
@@ -65,15 +98,25 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
+
         playerController.isJumping = value.isPressed;
-        rigidBody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
-       playerAnimator.SetBool(isJumpingHash, playerController.isJumping);
+        GetComponent<Rigidbody>().velocity =new Vector3(GetComponent<Rigidbody>().velocity.x, 8,  GetComponent<Rigidbody>().velocity.z);
+       // rigidBody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
+        playerAnimator.SetBool(isJumpingHash, true);
+        
+        
+    }
+    public void OnLook(InputValue value)
+    {
+
+        lookInput = value.Get<Vector2>();
+
     }
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Ground") && !playerController.isJumping) return;
+        //if (other.gameObject.CompareTag("Ground") && !playerController.isJumping) return;
         playerController.isJumping = false;
         playerAnimator.SetBool(isJumpingHash, false);
     }
-
+    
 }
