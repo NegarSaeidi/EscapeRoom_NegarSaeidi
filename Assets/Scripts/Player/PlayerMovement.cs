@@ -23,8 +23,8 @@ public class PlayerMovement : MonoBehaviour
 
     public readonly int movementXHash = Animator.StringToHash("MovementX");
     public readonly int movementYHash = Animator.StringToHash("MovementY");
-    public readonly int isJumpingHash = Animator.StringToHash("isJumping");
-    public readonly int isRunningHash = Animator.StringToHash("isRunning");
+    public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
+    public readonly int isRunningHash = Animator.StringToHash("IsRunning");
 
     private void Awake()
     {
@@ -51,13 +51,13 @@ public class PlayerMovement : MonoBehaviour
     public void OnMovement(InputValue value)
     {
         inputVector = value.Get<Vector2>();
-       // playerAnimator.SetFloat(movementXHash, inputVector.x);
-       // playerAnimator.SetFloat(movementYHash, inputVector.y);
+        playerAnimator.SetFloat(movementXHash, inputVector.x);
+       playerAnimator.SetFloat(movementYHash, inputVector.y);
     }
     public void OnRun(InputValue value)
     {
         playerController.isRunning = value.isPressed;
-      //  playerAnimator.SetBool(isRunningHash, playerController.isRunning);
+    playerAnimator.SetBool(isRunningHash, playerController.isRunning);
     }
     public void OnJump(InputValue value)
     {
@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         }
         playerController.isJumping = value.isPressed;
         rigidBody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
-        //playerAnimator.SetBool(isJumpingHash, playerController.isJumping);
+       playerAnimator.SetBool(isJumpingHash, playerController.isJumping);
     }
     private void OnCollisionEnter(Collision other)
     {

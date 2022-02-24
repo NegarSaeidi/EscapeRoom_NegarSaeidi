@@ -526,7 +526,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 5
   runSpeed: 10
-  jumpForce: 5
+  jumpForce: 3
 --- !u!114 &1458502921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -645,7 +645,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: b0d2d2cea7a24e74db30a251d4eb44d9, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 18a2406275e1a50419ad6e6b336fe660, type: 2}
+      objectReference: {fileID: 9100000, guid: 8bf6d677603634e4ab07da5767bc8df4, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b0d2d2cea7a24e74db30a251d4eb44d9, type: 3}
 --- !u!4 &1635058266 stripped
