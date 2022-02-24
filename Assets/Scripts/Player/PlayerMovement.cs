@@ -50,8 +50,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-
-
+       
+        if (JimmyAniamtion.win)
+            playerAnimator.SetBool("Victory", true);
      
         followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.x * aimSensitivity, Vector3.up);
         followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.y * aimSensitivity, Vector3.left);
