@@ -376,7 +376,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 13, y: -345}
+  m_AnchoredPosition: {x: 13, y: -332}
   m_SizeDelta: {x: 1512.875, y: 169.352}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &599269991
@@ -399,10 +399,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Character moves with WASD, rotates with MOUSE.
+  m_text: 'Character moves with WASD, jumps with space, rotates with MOUSE.
 
-    Puase the game by
-    pressing P'
+    Puase
+    the game by pressing P'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a570b1edff322404b982db75bae872f7, type: 2}
   m_sharedMaterial: {fileID: 3982174413381502950, guid: a570b1edff322404b982db75bae872f7, type: 2}
