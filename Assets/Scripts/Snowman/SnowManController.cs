@@ -13,9 +13,9 @@ public class SnowManController : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Player"))
-        { 
-            
-           
+        {
+
+            JimmyAniamtion.snowmanHit = true;
             WallSpeedController.WallSpeed = 5;
             StartCoroutine(causeDelay());
 

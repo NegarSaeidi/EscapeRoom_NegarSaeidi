@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
@@ -17,6 +18,7 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection = Vector3.zero;
     Vector2 lookInput = Vector2.zero;
 
+    public bool gameEnd;
    
     Rigidbody rigidBody;
     Animator playerAnimator;
@@ -33,7 +35,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundMask;
     public bool isGrounded;
 
-
+    public GameObject deathRespawn;
     private void Awake()
     {
         playerAnimator = GetComponent<Animator>();
@@ -43,44 +45,73 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
+        gameEnd = false;
         Cursor.lockState = CursorLockMode.Locked;
-     
+      
     }
 
 
     void Update()
     {
-       
-        if (JimmyAniamtion.win)
-            playerAnimator.SetBool("Victory", true);
-     
-        followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.x * aimSensitivity, Vector3.up);
-        followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.y * aimSensitivity, Vector3.left);
-
-        var angles = followTarget.transform.localEulerAngles;
-        angles.z = 0;
-        var angle = followTarget.transform.localEulerAngles.x;
-        if (angle > 180 && angle < 300)
+        if (!gameEnd)
         {
-            angles.x = 300;
+            if (JimmyAniamtion.win)
+            {
+                gameEnd = true;
+                playerAnimator.SetBool("Victory", true);
+            }
+            if (JimmyAniamtion.lose)
+            {
+                gameEnd = true;
+                playerAnimator.SetBool("Lose", true);
+            }
+            if(JimmyAniamtion.snowmanHit)
+            {
+                JimmyAniamtion.snowmanHit = false;
+                GetComponent<Rigidbody>().velocity = new Vector3(GetComponent<Rigidbody>().velocity.x, -20, GetComponent<Rigidbody>().velocity.z);
+            }
+            if(JimmyAniamtion.deathPlaneHit)
+            {
+                
+                transform.position = deathRespawn.transform.position;
+                gameEnd = true;
+                playerAnimator.SetBool("Lose", true);
+
+            }
+            if(JimmyAniamtion.bulbHit)
+            {
+                JimmyAniamtion.bulbHit = false;
+                GetComponent<Rigidbody>().velocity = new Vector3(GetComponent<Rigidbody>().velocity.x, 2, GetComponent<Rigidbody>().velocity.z);
+            }
+
+                followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.x * aimSensitivity, Vector3.up);
+            followTarget.transform.rotation *= Quaternion.AngleAxis(lookInput.y * aimSensitivity, Vector3.left);
+
+            var angles = followTarget.transform.localEulerAngles;
+            angles.z = 0;
+            var angle = followTarget.transform.localEulerAngles.x;
+            if (angle > 180 && angle < 300)
+            {
+                angles.x = 300;
+            }
+            else if (angle < 180 && angle > 70)
+            {
+                angles.x = 70;
+            }
+
+            followTarget.transform.localEulerAngles = angles;
+            transform.rotation = Quaternion.Euler(0, followTarget.transform.rotation.eulerAngles.y, 0);
+            followTarget.transform.localEulerAngles = new Vector3(angles.x, 0, 0);
+            //  transform.Rotate(Vector3.up * inputVector.x);
+
+
+            // if (playerController.isJumping) return;
+            if (!(inputVector.magnitude > 0)) moveDirection = Vector3.zero;
+            moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
+            float currentSpeed = playerController.isRunning ? runSpeed : walkSpeed;
+            Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
+            transform.position += movementDirection;
         }
-        else if (angle < 180 && angle > 70)
-        {
-            angles.x = 70;
-        }
-
-        followTarget.transform.localEulerAngles = angles;
-        transform.rotation = Quaternion.Euler(0, followTarget.transform.rotation.eulerAngles.y, 0);
-        followTarget.transform.localEulerAngles = new Vector3(angles.x, 0, 0);
-        //  transform.Rotate(Vector3.up * inputVector.x);
-
-
-       // if (playerController.isJumping) return;
-        if (!(inputVector.magnitude > 0)) moveDirection = Vector3.zero;
-        moveDirection = transform.forward * inputVector.y + transform.right * inputVector.x;
-        float currentSpeed = playerController.isRunning ? runSpeed : walkSpeed;
-        Vector3 movementDirection = moveDirection * (currentSpeed * Time.deltaTime);
-        transform.position += movementDirection;
     }
     public void OnMovement(InputValue value)
     {
