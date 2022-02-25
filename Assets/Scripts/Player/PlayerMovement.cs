@@ -130,7 +130,7 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-
+        GetComponent<AudioSource>().Play();
         playerController.isJumping = value.isPressed;
         GetComponent<Rigidbody>().velocity =new Vector3(GetComponent<Rigidbody>().velocity.x, 8,  GetComponent<Rigidbody>().velocity.z);
        // rigidBody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);

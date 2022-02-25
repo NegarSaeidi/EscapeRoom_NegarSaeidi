@@ -16,6 +16,7 @@ public class SnowManController : MonoBehaviour
         {
 
             JimmyAniamtion.snowmanHit = true;
+            GetComponent<AudioSource>().Play();
             WallSpeedController.WallSpeed = 5;
             StartCoroutine(causeDelay());
 

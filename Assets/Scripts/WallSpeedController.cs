@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class WallSpeedController : MonoBehaviour
 {
-   public static float WallSpeed;
+   public static float WallSpeed=0.5f;
 }

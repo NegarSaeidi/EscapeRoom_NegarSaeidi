@@ -14,7 +14,7 @@ public class BublController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-
+            GetComponent<AudioSource>().Play();
             WallSpeedController.WallSpeed = 0;
             StartCoroutine(causeDelay());
 
