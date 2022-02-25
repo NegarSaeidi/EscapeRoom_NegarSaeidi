@@ -18,26 +18,29 @@ public class MoveWall : MonoBehaviour
             warning.GetComponent<TextMeshProUGUI>().text = "";
         }
         else
-        { 
-            speed = WallSpeedController.WallSpeed;
-            if (CompareTag("IncreaseX"))
+        {
+            if (!JimmyAniamtion.inPause)
             {
-                int min = (int)calculateDistance() / 60;
-                int sec = (int)calculateDistance() % 60;
-                if (speed > 0)
-                    warning.GetComponent<TextMeshProUGUI>().text = min.ToString() + " : " + sec.ToString();
-                else
-                    warning.GetComponent<TextMeshProUGUI>().text = "Walls won't be moving for 5 seconds";
+                speed = WallSpeedController.WallSpeed;
+                if (CompareTag("IncreaseX"))
+                {
+                    int min = (int)calculateDistance() / 60;
+                    int sec = (int)calculateDistance() % 60;
+                    if (speed > 0)
+                        warning.GetComponent<TextMeshProUGUI>().text = min.ToString() + " : " + sec.ToString();
+                    else
+                        warning.GetComponent<TextMeshProUGUI>().text = "Walls won't be moving for 5 seconds";
 
+                }
+                if (CompareTag("IncreaseX"))
+                    transform.position += new Vector3((speed) * Time.deltaTime, 0, 0);
+                if (CompareTag("DecreaseX"))
+                    transform.position -= new Vector3((speed) * Time.deltaTime, 0, 0);
+                if (CompareTag("IncreaseZ"))
+                    transform.position += new Vector3(0, 0, (speed) * Time.deltaTime);
+                if (CompareTag("DecreaseZ"))
+                    transform.position -= new Vector3(0, 0, (speed) * Time.deltaTime);
             }
-            if (CompareTag("IncreaseX"))
-                transform.position += new Vector3((speed) * Time.deltaTime, 0, 0);
-            if (CompareTag("DecreaseX"))
-                transform.position -= new Vector3((speed) * Time.deltaTime, 0, 0);
-            if (CompareTag("IncreaseZ"))
-                transform.position += new Vector3(0, 0, (speed) * Time.deltaTime);
-            if (CompareTag("DecreaseZ"))
-                transform.position -= new Vector3(0, 0, (speed) * Time.deltaTime);
         }
     }
     private float calculateDistance()

@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     Animator playerAnimator;
     public GameObject gameFinishText;
     public GameObject mainmenuButton;
+    public GameObject pausePanel;
     public readonly int movementXHash = Animator.StringToHash("MovementX");
     public readonly int movementYHash = Animator.StringToHash("MovementY");
     public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
@@ -44,6 +45,7 @@ public class PlayerMovement : MonoBehaviour
         rigidBody = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
         mainmenuButton.SetActive(false);
+        pausePanel.SetActive(false);
     }
 
     void Start()
@@ -54,15 +56,16 @@ public class PlayerMovement : MonoBehaviour
         JimmyAniamtion.bulbHit = false;
         JimmyAniamtion.snowmanHit = false;
         JimmyAniamtion.deathPlaneHit = false;
-
+        JimmyAniamtion.inPause = false;
 
     }
 
 
     void Update()
     {
-        if (!gameEnd)
+        if (!gameEnd && !JimmyAniamtion.inPause)
         {
+            pausePanel.SetActive(false);
             if (JimmyAniamtion.win)
             {
                 gameEnd = true;
@@ -129,14 +132,20 @@ public class PlayerMovement : MonoBehaviour
     }
     public void OnMovement(InputValue value)
     {
-        inputVector = value.Get<Vector2>();
-        playerAnimator.SetFloat(movementXHash, inputVector.x);
-       playerAnimator.SetFloat(movementYHash, inputVector.y);
+        if (!JimmyAniamtion.inPause)
+        {
+            inputVector = value.Get<Vector2>();
+            playerAnimator.SetFloat(movementXHash, inputVector.x);
+            playerAnimator.SetFloat(movementYHash, inputVector.y);
+        }
     }
     public void OnRun(InputValue value)
     {
-        playerController.isRunning = value.isPressed;
-    playerAnimator.SetBool(isRunningHash, playerController.isRunning);
+        if (!JimmyAniamtion.inPause)
+        {
+            playerController.isRunning = value.isPressed;
+            playerAnimator.SetBool(isRunningHash, playerController.isRunning);
+        }
     }
     public void OnJump(InputValue value)
     {
@@ -144,13 +153,22 @@ public class PlayerMovement : MonoBehaviour
         {
             return;
         }
-        GetComponent<AudioSource>().Play();
-        playerController.isJumping = value.isPressed;
-        GetComponent<Rigidbody>().velocity =new Vector3(GetComponent<Rigidbody>().velocity.x, 8,  GetComponent<Rigidbody>().velocity.z);
-       // rigidBody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
-        playerAnimator.SetBool(isJumpingHash, true);
+        if (!JimmyAniamtion.inPause)
+        {
+            GetComponent<AudioSource>().Play();
+            playerController.isJumping = value.isPressed;
+            GetComponent<Rigidbody>().velocity = new Vector3(GetComponent<Rigidbody>().velocity.x, 8, GetComponent<Rigidbody>().velocity.z);
+            // rigidBody.AddForce((transform.up + moveDirection) * jumpForce, ForceMode.Impulse);
+            playerAnimator.SetBool(isJumpingHash, true);
+        }
         
         
+    }
+    public void OnPause(InputValue value)
+    {
+        playerController.isPaused = value.isPressed;
+        pausePanel.SetActive(true);
+        JimmyAniamtion.inPause = true;
     }
     public void OnLook(InputValue value)
     {

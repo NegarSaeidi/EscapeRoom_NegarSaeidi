@@ -18,11 +18,15 @@ public class SceneController : MonoBehaviour
     }
     public void OnCredits()
     {
-        SceneManager.LoadScene("Credits");
+        SceneManager.LoadScene("CreditScreen");
     }
     public void OnMainMenu()
     {
         SceneManager.LoadScene("Menu");
+    }
+    public void OnResume()
+    {
+        JimmyAniamtion.inPause = false;
     }
 }
 
