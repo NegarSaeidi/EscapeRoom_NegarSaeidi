@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
@@ -22,7 +23,8 @@ public class PlayerMovement : MonoBehaviour
    
     Rigidbody rigidBody;
     Animator playerAnimator;
-
+    public GameObject gameFinishText;
+    public GameObject mainmenuButton;
     public readonly int movementXHash = Animator.StringToHash("MovementX");
     public readonly int movementYHash = Animator.StringToHash("MovementY");
     public readonly int isJumpingHash = Animator.StringToHash("IsJumping");
@@ -41,13 +43,19 @@ public class PlayerMovement : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         rigidBody = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
+        mainmenuButton.SetActive(false);
     }
 
     void Start()
     {
         gameEnd = false;
-        Cursor.lockState = CursorLockMode.Locked;
-      
+        JimmyAniamtion.win = false;
+        JimmyAniamtion.lose = false;
+        JimmyAniamtion.bulbHit = false;
+        JimmyAniamtion.snowmanHit = false;
+        JimmyAniamtion.deathPlaneHit = false;
+
+
     }
 
 
@@ -59,11 +67,16 @@ public class PlayerMovement : MonoBehaviour
             {
                 gameEnd = true;
                 playerAnimator.SetBool("Victory", true);
+                gameFinishText.GetComponent<TextMeshProUGUI>().text = "YAAY!...YOU WON!";
+                mainmenuButton.SetActive(true);
             }
             if (JimmyAniamtion.lose)
             {
+                gameFinishText.GetComponent<TextMeshProUGUI>().text = "It's ok!...try one more time!";
                 gameEnd = true;
                 playerAnimator.SetBool("Lose", true);
+                mainmenuButton.SetActive(true);
+
             }
             if(JimmyAniamtion.snowmanHit)
             {
@@ -72,11 +85,12 @@ public class PlayerMovement : MonoBehaviour
             }
             if(JimmyAniamtion.deathPlaneHit)
             {
-                
+                gameFinishText.GetComponent<TextMeshProUGUI>().text = "It's ok!...try one more time!";
                 transform.position = deathRespawn.transform.position;
                 gameEnd = true;
+                JimmyAniamtion.deathPlaneHit = false;
                 playerAnimator.SetBool("Lose", true);
-
+                mainmenuButton.SetActive(true);
             }
             if(JimmyAniamtion.bulbHit)
             {

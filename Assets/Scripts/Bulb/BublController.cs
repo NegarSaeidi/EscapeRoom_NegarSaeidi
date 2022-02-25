@@ -15,6 +15,7 @@ public class BublController : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             GetComponent<AudioSource>().Play();
+            transform.position = new Vector3(1000, 1000, 1000);
             WallSpeedController.WallSpeed = 0;
             StartCoroutine(causeDelay());
 
